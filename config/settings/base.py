@@ -143,3 +143,18 @@ STATIC_URL = "/static/"
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Celery settings
+CELERY_BROKER_URL = "amqp://"
+CELERY_RESULT_BACKEND = "redis://"
+CELERY_TIMEZONE = "Asia/Tehran"
+CELERY_BEAT_SCHEDULE = {
+    "delete_recycle_bin_expired_articles": {
+        "task": "blog.tasks.recycle_bin_find_and_delete_articles_monthly",
+        "schedule": 60 * 60 * 24,
+        "args": (),
+        "options": {
+            "expires": 60,
+        },
+    }
+}

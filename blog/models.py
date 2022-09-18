@@ -32,7 +32,7 @@ class Article(TimeStampedModel):
 
     objects = CustomManager()
 
-    def delete(self, using=None, keep_parents=False):
+    def soft_delete(self):
         self.deleted = timezone.now()
         self.save()
 

@@ -19,12 +19,35 @@ def recycle_bin(request: HttpRequest) -> HttpResponse:
 
 def remove_article(request: HttpRequest, pk) -> HttpResponse:
     article = Article.objects.get(pk=pk)
-    article.delete()
+    article.soft_delete()
     return redirect(reverse("blog:show_articles"))
+
+
+def delete_article(request: HttpRequest, pk) -> HttpResponse:
+    article = Article.objects.get(pk=pk)
+    article.delete()
+    return redirect(reverse("blog:recycle_bin"))
 
 
 def restore_article(request: HttpRequest, pk) -> HttpResponse:
     article = Article.objects.get(pk=pk)
     article.deleted = None
     article.save()
+    return redirect(reverse("blog:recycle_bin"))
+
+
+def restore_all(request: HttpRequest) -> HttpResponse:
+    inactive_articles = Article.objects.inactive_items()
+    for article in inactive_articles:
+        article.deleted = None
+        article.save()
+
+    return redirect(reverse("blog:recycle_bin"))
+
+
+def delete_all(request: HttpRequest) -> HttpResponse:
+    inactive_articles = Article.objects.inactive_items()
+    for article in inactive_articles:
+        article.delete()
+
     return redirect(reverse("blog:recycle_bin"))
