@@ -1,5 +1,5 @@
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse
 
 from .models import Article
@@ -14,7 +14,11 @@ def show_articles(request: HttpRequest) -> HttpResponse:
 
 def recycle_bin(request: HttpRequest) -> HttpResponse:
     inactive_articles = Article.objects.inactive_items()
-    return render(request, "blog/recycle_bin.html", {"articles": inactive_articles})
+    return render(
+        request,
+        "blog/recycle_bin.html",
+        {"articles": inactive_articles}
+    )
 
 
 def remove_article(request: HttpRequest, pk) -> HttpResponse:

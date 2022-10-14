@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+    web:
+        container_name: recycle_web
+        image: recycle
+        build: 
+            dockerfile: Dockerfile
+        ports:
+            - "8000:8000"
+        depends_on:
+            - db
+        environment:
+            - SECRET_KEY=askdfkaskdfj34ek3kjkjskfjsdioij
+            - DEBUG=1
+            - DB_NAME=mydb
+            - DB_HOST=db
+            - DB_PORT=5432
+            - DB_USER=postgres
+            - DB_PASSWORD=""
+            - DJANGO_ENV=local
+        command: python manage.py runserver 0.0.0.0:8000
+              # command: wait-for-it --service db:5432 -- python manage.py migrate && gunicorn config.wsgi:application -b 127.0.0.1:8000 
+        networks:
+            - nginx_network
+            - pg_network
+        volumes:
+            - .:/home/app/web
+
+    db:
+        container_name: recycle_db
+        image: postgres
+        restart: always
+        volumes:
+            - postgres_data:/var/lib/postgresql/data/
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=""
+            - POSTGRES_DB=mydb
+        networks:
+            - pg_network
+    
+    nginx:
+        container_name: recycle_nginx
+        build: ./nginx
+        ports:
+            - 1995:80
+        volumes:
+            - static_volume:/home/app/web/static
+        depends_on:
+            - web
+        restart: "on-failure"
+        networks:
+            - nginx_network
+
+networks:
+    nginx_network:
+        driver: bridge
+    pg_network:
+        driver: bridge
+
+volumes:
+    postgres_data:
+    static_volume:
