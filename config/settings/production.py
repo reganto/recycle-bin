@@ -1,32 +1,22 @@
-from .base import *
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
+from .base import *  # noqa: F403
 
-DEBUG = config("DEBUG", default=False, cast=bool)
+DEBUG = False
+ALLOWED_HOSTS = ["bin.io"]
 STATIC_ROOT = BASE_DIR / "static"
-ALLOWED_HOSTS = [config("ALLOWED_HOSTS").split(" ")]
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': True,
-    'formatters': {
-        'verbose': {
-            'format': '%(asctime)s %(levelname)s [%(name)s:%(lineno)s] %(module)s %(process)d %(thread)d %(message)s'
-        }
-    },
-    'handlers': {
-        'gunicorn': {
-            'level': 'DEBUG',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'formatter': 'verbose',
-            'filename': '/opt/djangoprojects/reports/bin/gunicorn.errors',
-            'maxBytes': 1024 * 1024 * 100,  # 100 mb
-        }
-    },
-    'loggers': {
-        'gunicorn.errors': {
-            'level': 'DEBUG',
-            'handlers': ['gunicorn'],
-            'propagate': True,
-        },
-    }
-}
+sentry_sdk.init(
+    dsn=config("SENTRY_DSN"),  # noqa: F405
+    integrations=[
+        DjangoIntegration(),
+    ],
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    # We recommend adjusting this value in production.
+    traces_sample_rate=1.0,
+    # If you wish to associate users to errors (assuming you are using
+    # django.contrib.auth) you may enable sending PII data.
+    send_default_pii=True,
+)
