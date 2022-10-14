@@ -164,5 +164,4 @@ cython_debug/
 .env.prod.db
 
 # static files
-
 static/
