@@ -160,8 +160,8 @@ cython_debug/
 #.idea/
 
 # envs
-.env.prod
-.env.prod.db
+config/envs/.env.prod
+config/envs/.env.prod.db
 
 # static files
 static/
