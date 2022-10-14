@@ -27,7 +27,10 @@ class Article(TimeStampedModel):
         verbose_name=_("Title"),
         help_text=_("Title of the article"),
     )
-    body = models.TextField(verbose_name=_("Body"), help_text=_("Body of the article"))
+    body = models.TextField(
+        verbose_name=_("Body"),
+        help_text=_("Body of the article")
+    )
     deleted = models.DateTimeField(editable=False, null=True)
 
     objects = CustomManager()
