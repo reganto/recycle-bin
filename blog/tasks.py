@@ -13,6 +13,10 @@ def days_after(deleted_date):
 
 @shared_task()
 def recycle_bin_find_and_delete_articles_monthly():
+    """
+    A periodic task to permanently remove articles
+    that have been deleted for 30 days.
+    """
     inactive_articles = Article.objects.inactive_items()
     for article in inactive_articles:
         if days_after(article.deleted) >= 30:

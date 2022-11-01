@@ -1,23 +1,29 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width">
-        <title>Recycle Bin</title>
-    </head>
-    <body>
-        <h1>Recycle Bin | <small><a href="{% url 'blog:show_articles' %}">Articles</a></small></h1>
-        <a href="{% url 'blog:restore_all' %}">Restore all articles</a> |
-        <a href="{% url 'blog:delete_all' %}">Delete all articles</a>
-        {% if articles %}
-        {% for article in articles %}
-        <h2>{{ article.title }}</h2>
-        <a href="{% url 'blog:restore_article' article.id %}">restore</a> |
-        <a href="{% url 'blog:delete_article' article.id %}">delete</a>
-        <hr>
-        {% endfor %}
-        {% else %}
-        <p>Recycle Bin is empty</p>
-        {% endif %}
-    </body>
-</html>
+{% extends "blog/base.html" %}
+
+{% block title %}Recycle Bin{% endblock %}
+
+
+{% block body %}
+<div id="content" class="container">
+    <h1>
+        Recycle Bin |
+        <small><a href="{% url 'blog:show_articles' %}" class="btn btn-warning btn-sm">Articles</a></small>
+    </h1>
+    <hr>
+    <a href="{% url 'blog:restore_all' %}" class="btn btn-primary">Restore all articles</a> |
+    <a href="{% url 'blog:delete_all' %}" class="btn btn-danger">Delete all articles</a>
+    <hr>
+    {% for article in articles %}
+    <div class="article" class="card">
+        <div class="card-body">
+            <h2 class="card-title">{{ article.title }}</h2>
+            <a href="{% url 'blog:restore_article' article.id %}" class="btn btn-primary btn-sm">restore</a> |
+            <a href="{% url 'blog:delete_article' article.id %}" class="btn btn-danger btn-sm">delete</a>
+        </div>
+    </div>
+    <hr>
+    {% empty %}
+    <p>Recycle Bin is empty</p>
+    {% endfor %}
+</div>
+{% endblock %}
