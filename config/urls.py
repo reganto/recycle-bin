@@ -16,10 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.http import HttpRequest, HttpResponse
 from django.urls import include, path
+from django.shortcuts import redirect
 
 
 def home(request: HttpRequest) -> HttpResponse:
-    return HttpResponse("Home")
+    return redirect("blog:show_articles")
 
 
 urlpatterns = [
