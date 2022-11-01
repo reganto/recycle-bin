@@ -165,3 +165,6 @@ config/envs/.env.prod.db
 
 # static files
 static/
+
+# Vscode stuff
+.vscode
