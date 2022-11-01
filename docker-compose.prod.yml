@@ -21,7 +21,7 @@ services:
 
     db:
         container_name: recycle_db
-        image: postgres
+        image: postgres:14
         ports:
             - "5432:5432"
         restart: always
